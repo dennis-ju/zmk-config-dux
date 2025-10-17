@@ -1,26 +1,209 @@
-/*
- * Copyright (c) 2021 The ZMK Contributors
- *
- * SPDX-License-Identifier: MIT
- */
-
+#include "keys_sv.h"
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 
+#define DEFAULT 0
+#define NUM 1
+#define SYM 2
+#define FUN 3
+#define NAV 4
+#define MSE 5
+#define MED 6
+
+&caps_word { continue-list = <UNDERSCORE MINUS BACKSPACE DELETE>; };
+
 / {
+
+    behaviors {
+        hm: homerow_mods {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HOMEROW_MODS";
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+            quick_tap_ms = <150>;
+            flavor = "balanced";
+            bindings = <&kp>, <&kp>;
+        };
+
+        tap_dance_capsword: tap_dance_capsword {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TAP_DANCE_CAPSWORD";
+            #binding-cells = <0>;
+            bindings = <&kp SV_COMMA>, <&caps_word>;
+        };
+
+        tap_dance_vim_save_exit: tap_dance_vim_save_exit {
+            compatible = "zmk,behavior-tap-dance";
+            label = "TAP_DANCE_VIM_SAVE_EXIT";
+            #binding-cells = <0>;
+            bindings = <&vim_quit>, <&vim_save>, <&vim_save_exit>;
+        };
+
+        ltr: ltr {
+            compatible = "zmk,behavior-hold-tap";
+            label = "LTR";
+            bindings = <&mo>, <&key_repeat>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <300>;
+        };
+
+        htm: htm {
+            compatible = "zmk,behavior-hold-tap";
+            label = "HTM";
+            bindings = <&mo>, <&kp>;
+
+            #binding-cells = <2>;
+            tapping-term-ms = <200>;
+        };
+    };
+
+    macros {
+        vim_save_exit: vim_save_exit {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp ESCAPE &kp SV_COLON &kp W &kp Q &kp ENTER>;
+            label = "VIM_SAVE_EXIT";
+            wait-ms = <10>;
+            tap-ms = <10>;
+        };
+
+        tide_macro: tide_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp SV_TILDE &kp SPACE>;
+            label = "TIDE_MACRO";
+        };
+
+        to_sym1: to_sym1 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&sl 1>;
+            label = "TO_SYM1";
+        };
+
+        to_sym2: to_sym2 {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&sl 2>;
+            label = "TO_SYM2";
+        };
+
+        vim_save: vim_save {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp ESCAPE &kp SV_COLON &kp W &kp ENTER>;
+            label = "VIM_SAVE";
+            wait-ms = <10>;
+            tap-ms = <10>;
+        };
+
+        gave_macro: gave_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp SV_GRAVE &kp SPACE>;
+            label = "GAVE_MACRO";
+        };
+
+        vim_quit: vim_quit {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp ESCAPE &kp SV_COLON &kp Q &kp ENTER>;
+            label = "VIM_QUIT";
+            wait-ms = <10>;
+            tap-ms = <10>;
+        };
+
+        sticky_sym: sticky {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&sl 1>;
+            label = "STICKY";
+        };
+    };
 
     keymap {
         compatible = "zmk,keymap";
 
-        // This is a sample keymap intended to be replaced with your own
-        base_layer {
+        alpha1 {
             bindings = <
-                &kp Q     &kp W     &kp E     &kp R     &kp T     &kp Y     &kp U     &kp I     &kp O     &kp P
-                &kp A     &kp S     &kp D     &kp F     &kp G     &kp H     &kp J     &kp K     &kp L     &kp SEMI
-                &kp Z     &kp X     &kp C     &kp V     &kp B     &kp N     &kp M     &kp COMMA &kp DOT   &kp SLASH
-                                              &kp TAB   &kp BSPC  &kp SPACE &kp ENTER
+&kp SV_B       &kp SV_L       &kp SV_D        &kp SV_C         &kp SV_V    &kp SV_J  &kp SV_Y         &kp SV_O        &kp SV_U              &kp SV_COMMA
+&hm LALT SV_N  &hm LGUI SV_R  &hm LCTRL SV_T  &hm LSHIFT SV_S  &kp SV_G    &kp SV_P  &hm LSHIFT SV_H  &hm LCTRL SV_A  &hm LGUI SV_E         &hm LALT SV_I
+&kp SV_X       &kp SV_Q       &kp SV_M        &lt 3 SV_W       &kp SV_Z    &kp SV_K  &lt 4 SV_F       &kp SV_UNDER    &kp SV_DOUBLE_QUOTES  &kp SV_DOT
+                                              &sticky_sym      &ltr 5 0    &ltr 8 0  &htm 6 SPACE
             >;
         };
 
+        alpha2 {
+            bindings = <
+&kp SV_PIPE  &kp SV_AMPS    &kp Z         &kp SV_EXCL       &none    &none  &kp SV_QUESTION  &kp SV_EQUAL          &kp SV_HASH          &kp SV_BACKSLASH
+&tide_macro  &kp SV_A_RING  &kp M         &kp K             &none    &none  &kp V            &kp SV_SEMI           &kp SV_A_UMLAUT      &kp SV_O_UMLAUT
+&none        &kp X          &kp SV_COLON  &kp SV_MINUS      &none    &none  &kp SV_FSLH      &kp SV_DOUBLE_QUOTES  &kp SV_SINGLE_QUOTE  &gave_macro
+                                          &kp SV_SEMICOLON  &none    &none  &to_sym2
+            >;
+        };
+
+        alpha2_caps {
+            bindings = <
+&none      &none      &kp LS(Z)  &none      &none    &none  &none      &none        &none      &none
+&kp LS(F)  &kp LS(A)  &kp LS(M)  &kp LS(K)  &none    &none  &kp LS(V)  &kp LS(Q)    &kp LS(A)  &kp LS(O)
+&none      &kp LS(X)  &none      &none      &none    &none  &none      &gave_macro  &none      &none
+                                 &none      &none    &none  &none
+            >;
+        };
+
+        sym_r {
+            bindings = <
+&none  &none  &none  &none  &none    &none  &kp SV_DOLLAR  &tap_dance_vim_save_exit  &kp SV_SEMI  &kp SV_HASH
+&none  &none  &none  &none  &none    &none  &kp SV_LPAR    &kp SV_RPAR               &kp SV_LBKT  &kp SV_RBKT
+&none  &none  &none  &none  &none    &none  &kp SV_AT      &kp SV_SQT                &kp SV_DQT   &none
+                     &none  &none    &none  &none
+            >;
+        };
+
+        sym_l {
+            bindings = <
+&none      &kp SV_PLUS  &kp SV_STAR  &kp SV_CARET    &none    &none  &none  &none  &none  &none
+&kp SV_LT  &kp SV_GT    &kp SV_LBRC  &kp SV_RBRC     &none    &none  &none  &none  &none  &none
+&none      &none        &kp SV_SEMI  &kp SV_PERCENT  &none    &none  &none  &none  &none  &none
+                                     &none           &none    &none  &none
+            >;
+        };
+
+        num {
+            bindings = <
+&none      &kp BACKSPACE  &kp N5     &kp N6     &none    &none  &kp N7        &kp N8      &kp N9  &none
+&kp LC(A)  &kp LC(Z)      &kp N0     &kp N1     &none    &none  &kp N2        &kp N3      &kp N4  &none
+&none      &kp LC(X)      &kp LC(C)  &kp LC(V)  &none    &none  &kp SV_COMMA  &kp SV_DOT  &none   &none
+                                     &none      &none    &none  &none
+            >;
+        };
+
+        sys {
+            bindings = <
+&none  &none            &kp DEL      &kp HOME  &none       &none  &none     &kp BACKSPACE  &none      &none
+&none  &kp TAB          &kp ENTER    &kp ESC   &none       &none  &kp LEFT  &kp DOWN       &kp UP     &kp RIGHT
+&none  &kp LC(LS(TAB))  &kp LC(TAB)  &kp END   &none       &none  &sl 7     &kp PG_DN      &kp PG_UP  &none
+                                     &kp LGUI  &kp LALT    &none  &none
+            >;
+        };
+
+        fun {
+            bindings = <
+&kp F9  &kp F10  &kp F11  &kp F12  &none    &none  &none   &none   &none   &none
+&kp F1  &kp F2   &kp F3   &kp F4   &none    &none  &kp F5  &kp F6  &kp F7  &kp F8
+&none   &none    &none    &none    &none    &none  &none   &none   &none   &none
+                          &none    &none    &none  &none
+            >;
+        };
+
+        wnav {
+            bindings = <
+&none       &none       &kp ENTER     &kp R          &none    &none  &none         &kp W       &none       &none
+&kp LG(N1)  &kp LG(N2)  &kp LG(N3)    &kp LG(N4)     &none    &none  &kp LG(N5)    &kp LG(N6)  &kp LG(N7)  &kp LG(N8)
+&none       &none       &kp LG(LEFT)  &kp LG(RIGHT)  &none    &none  &kp LG(DOWN)  &kp LG(UP)  &none       &none
+                                      &kp LSHFT      &none    &none  &none
+            >;
+        };
     };
 };
